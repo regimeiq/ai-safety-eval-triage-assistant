@@ -63,7 +63,7 @@ def render_evaluation_report(run: TriageRun) -> str:
             "## Limitations",
             "",
             "- Synthetic fixture benchmark; metrics do not estimate production safety performance.",
-            "- Redacted summaries are suitable for portfolio demonstration, not full policy adjudication.",
+            "- Redacted summaries are suitable for public demonstration, not full policy adjudication.",
             "- Clustering is deterministic decision support and should be reviewed by a human analyst.",
         ]
     )
@@ -161,7 +161,7 @@ def render_risk_register(run: TriageRun) -> str:
         "",
         f"Generated: {run.generated_at.isoformat()}",
         "",
-        "This register is a scoped portfolio artifact derived from synthetic eval fixtures. It is intended to demonstrate emerging-risk triage, not estimate production prevalence.",
+        "This register is a scoped demonstration artifact derived from synthetic eval fixtures. It is intended to demonstrate emerging-risk triage, not estimate production prevalence.",
         "",
         "| Risk Area | Abuse Pathway | Severity | Prevalence | Exposure | Trajectory | Confidence | Score | Monitoring Signals | Recommended Mitigation |",
         "|---|---|---|---|---|---|---|---:|---|---|",

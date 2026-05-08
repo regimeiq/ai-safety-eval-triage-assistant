@@ -1,6 +1,6 @@
 # AI Safety Eval Triage: Evaluation Report
 
-Generated: 2026-05-08T00:21:35.080049+00:00
+Generated: 2026-05-08T00:29:17.429742+00:00
 Taxonomy version: `2026-05-v1`
 
 ## Summary Metrics
@@ -34,5 +34,5 @@ Taxonomy version: `2026-05-v1`
 ## Limitations
 
 - Synthetic fixture benchmark; metrics do not estimate production safety performance.
-- Redacted summaries are suitable for portfolio demonstration, not full policy adjudication.
+- Redacted summaries are suitable for public demonstration, not full policy adjudication.
 - Clustering is deterministic decision support and should be reviewed by a human analyst.

@@ -1,8 +1,8 @@
 # Emerging AI Risk Register
 
-Generated: 2026-05-08T00:21:35.080049+00:00
+Generated: 2026-05-08T00:29:17.429742+00:00
 
-This register is a scoped portfolio artifact derived from synthetic eval fixtures. It is intended to demonstrate emerging-risk triage, not estimate production prevalence.
+This register is a scoped demonstration artifact derived from synthetic eval fixtures. It is intended to demonstrate emerging-risk triage, not estimate production prevalence.
 
 | Risk Area | Abuse Pathway | Severity | Prevalence | Exposure | Trajectory | Confidence | Score | Monitoring Signals | Recommended Mitigation |
 |---|---|---|---|---|---|---|---:|---|---|
