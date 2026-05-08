@@ -1,0 +1,13 @@
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+.DS_Store
+.streamlit/
+.venv/
+venv/
+move_me/
+out/
+*.pdf
+*.pyc
