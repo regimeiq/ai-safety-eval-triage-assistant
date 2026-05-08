@@ -42,4 +42,3 @@ def test_extra_prompt_field_is_rejected() -> None:
     payload["full_prompt"] = "not allowed"
     with pytest.raises(ValidationError):
         EvalCase.model_validate(payload)
-

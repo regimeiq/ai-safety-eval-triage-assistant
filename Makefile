@@ -1,4 +1,4 @@
-.PHONY: demo dashboard evaluate heartbeat casepack risk-register import-demo test clean help
+.PHONY: demo dashboard evaluate heartbeat casepack risk-register import-demo test lint format check clean help
 
 PYTHONPATH := src
 
@@ -33,7 +33,18 @@ import-demo: ## Normalize the fixture data through the generic import adapter
 test: ## Run pytest suite
 	PYTHONPATH=$(PYTHONPATH) python -m pytest tests/ -v
 
+lint: ## Check formatting, imports, and lint rules
+	PYTHONPATH=$(PYTHONPATH) python -m ruff check .
+	PYTHONPATH=$(PYTHONPATH) python -m black --check .
+
+format: ## Format Python code and organize imports
+	PYTHONPATH=$(PYTHONPATH) python -m isort .
+	PYTHONPATH=$(PYTHONPATH) python -m black .
+	PYTHONPATH=$(PYTHONPATH) python -m ruff check . --fix
+
+check: lint test ## Run lint and tests
+
 clean: ## Remove generated runtime artifacts
-	rm -f out/triage_run.json
-	rm -f docs/evaluation_report.md docs/eval_health_heartbeat.md docs/demo_casepack.md docs/emerging_ai_risk_register.md
+	rm -f out/triage_run.json out/imported_eval_cases.json
+	rm -f docs/evaluation_report.md docs/eval_health_heartbeat.md docs/demo_casepack.md docs/emerging_ai_risk_register.md docs/error_analysis.md
 	@echo "Cleaned generated demo artifacts."

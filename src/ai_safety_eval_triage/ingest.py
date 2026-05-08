@@ -14,4 +14,3 @@ def load_eval_cases(path: str | Path) -> tuple[str, list[EvalCase]]:
     if not isinstance(raw_cases, list) or not raw_cases:
         raise ValueError(f"No eval cases found in {fixture_path}")
     return taxonomy_version, [EvalCase.model_validate(item) for item in raw_cases]
-

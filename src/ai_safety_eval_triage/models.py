@@ -123,6 +123,7 @@ class TriageMetrics(BaseModel):
 
 class TriageRun(BaseModel):
     taxonomy_version: str
+    analysis_as_of: datetime
     cases: list[TriageCase]
     clusters: list[RiskCluster]
     health: EvalHealthSnapshot

@@ -13,8 +13,10 @@ from ai_safety_eval_triage.reports import (
 def test_health_snapshot_detects_quality_issues() -> None:
     version, cases = load_eval_cases("fixtures/eval_cases.json")
     run = run_triage(cases, version)
+    assert run.analysis_as_of.isoformat().startswith("2026-05-05")
     assert run.health.missing_label_count == 1
     assert run.health.low_reliability_count == 1
+    assert run.health.stale_case_count == 2
     assert run.health.evaluator_disagreement_count >= 2
     assert "sexual_content" in run.health.blind_spot_policies
 
@@ -44,3 +46,12 @@ def test_error_analysis_renders_failure_sections() -> None:
     assert "False Negatives" in report
     assert "Over-Merged Pairs" in report
     assert "Under-Merged Pairs" in report
+
+
+def test_evaluation_report_labels_fixture_metrics_as_sanity_checks() -> None:
+    version, cases = load_eval_cases("fixtures/eval_cases.json")
+    run = run_triage(cases, version)
+    report = render_evaluation_report(run)
+    assert "Workflow Summary" in report
+    assert "Synthetic Fixture Checks" in report
+    assert "not production safety-performance claims" in report

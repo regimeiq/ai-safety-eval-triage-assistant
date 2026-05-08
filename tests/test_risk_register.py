@@ -15,6 +15,8 @@ def test_risk_register_contains_emerging_risk_fields() -> None:
     assert entries[0].early_indicators
     assert entries[0].monitoring_signals
     assert entries[0].recommended_mitigation
+    by_area = {entry.risk_area: entry for entry in entries}
+    assert by_area["Violence & Threats"].trajectory == "Needs Refresh"
 
 
 def test_risk_register_report_is_public_safe() -> None:

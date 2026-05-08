@@ -1,14 +1,25 @@
 # AI Safety Eval Triage: Evaluation Report
 
-Generated: 2026-05-08T13:29:24.667968+00:00
+Generated: 2026-05-08T14:07:13.948814+00:00
+Analysis as of: 2026-05-05T12:30:00+00:00
 Taxonomy version: `2026-05-v1`
 
-## Summary Metrics
+## Workflow Summary
 
 | Metric | Value |
 |---|---:|
 | Cases | 18 |
+| Cases to review | 10 |
 | Risk clusters | 12 |
+| Risk register entries | 7 |
+| Eval health flags | 8 |
+
+## Synthetic Fixture Checks
+
+These checks verify the fixture workflow against hand-authored demonstration labels; they are not production safety-performance claims.
+
+| Metric | Value |
+|---|---:|
 | Escalation precision | 0.900 |
 | Escalation recall | 1.000 |
 | Escalation F1 | 0.947 |

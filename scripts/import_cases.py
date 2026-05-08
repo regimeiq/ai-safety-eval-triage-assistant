@@ -7,7 +7,6 @@ from pathlib import Path
 
 from ai_safety_eval_triage.models import EvalCase
 
-
 REQUIRED_FIELDS = {
     "case_id",
     "dataset_source",
@@ -98,7 +97,9 @@ def import_cases(input_path: Path, output_path: Path, input_format: str) -> None
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Normalize local eval-case CSV/JSON into fixture schema.")
+    parser = argparse.ArgumentParser(
+        description="Normalize local eval-case CSV/JSON into fixture schema."
+    )
     parser.add_argument("--input", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--format", choices=["csv", "json"], default="csv")

@@ -4,7 +4,9 @@ __pycache__/
 .mypy_cache/
 .coverage
 .DS_Store
-.streamlit/
+.streamlit/*
+!.streamlit/
+!.streamlit/config.toml
 .venv/
 venv/
 move_me/

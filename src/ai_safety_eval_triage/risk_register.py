@@ -38,11 +38,13 @@ MITIGATIONS = {
 def build_risk_register(run: TriageRun) -> list[RiskRegisterEntry]:
     cases_by_id = {case.case_id: case for case in run.cases}
     entries = [
-        _entry_from_cluster(cluster, cases_by_id, run.generated_at)
+        _entry_from_cluster(cluster, cases_by_id, run.analysis_as_of)
         for cluster in run.clusters
         if cluster.escalation_tier != "LOW"
     ]
-    return sorted(entries, key=lambda entry: (-entry.risk_score, entry.risk_area, entry.abuse_pathway))
+    return sorted(
+        entries, key=lambda entry: (-entry.risk_score, entry.risk_area, entry.abuse_pathway)
+    )
 
 
 def _entry_from_cluster(

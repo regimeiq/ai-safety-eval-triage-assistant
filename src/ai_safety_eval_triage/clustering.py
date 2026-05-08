@@ -48,17 +48,31 @@ def _link_reasons(left: TriageCase, right: TriageCase, similarity: float) -> lis
         and left.attack_style != "benign_control"
         and similarity >= 0.16
     )
-    strong_policy_link = same_policy and similarity >= 0.12 and (
-        bool(shared_signals) or left.attack_style == right.attack_style
+    strong_policy_link = (
+        same_policy
+        and similarity >= 0.12
+        and (bool(shared_signals) or left.attack_style == right.attack_style)
     )
     semantic_policy_link = same_policy and similarity >= 0.25
-    recurring_control_link = same_policy and left.attack_style == right.attack_style == "benign_control" and similarity >= 0.2
-    if semantic_policy_link or strong_policy_link or recurring_control_link or shared_signal_link or shared_attack_link:
+    recurring_control_link = (
+        same_policy
+        and left.attack_style == right.attack_style == "benign_control"
+        and similarity >= 0.2
+    )
+    if (
+        semantic_policy_link
+        or strong_policy_link
+        or recurring_control_link
+        or shared_signal_link
+        or shared_attack_link
+    ):
         return sorted(set(reasons))
     return []
 
 
-def assign_clusters(cases: list[TriageCase]) -> tuple[list[TriageCase], dict[tuple[str, str], list[str]]]:
+def assign_clusters(
+    cases: list[TriageCase],
+) -> tuple[list[TriageCase], dict[tuple[str, str], list[str]]]:
     if not cases:
         return [], {}
 
@@ -109,7 +123,9 @@ def assign_clusters(cases: list[TriageCase]) -> tuple[list[TriageCase], dict[tup
     return assigned, pair_reasons
 
 
-def build_clusters(cases: list[TriageCase], pair_reasons: dict[tuple[str, str], list[str]]) -> list[RiskCluster]:
+def build_clusters(
+    cases: list[TriageCase], pair_reasons: dict[tuple[str, str], list[str]]
+) -> list[RiskCluster]:
     grouped: dict[str, list[TriageCase]] = defaultdict(list)
     for case in cases:
         grouped[str(case.cluster_id)].append(case)
@@ -152,4 +168,6 @@ def build_clusters(cases: list[TriageCase], pair_reasons: dict[tuple[str, str], 
                 rationale=rationale,
             )
         )
-    return sorted(clusters, key=lambda cluster: (-cluster.max_score, -cluster.size, cluster.cluster_id))
+    return sorted(
+        clusters, key=lambda cluster: (-cluster.max_score, -cluster.size, cluster.cluster_id)
+    )

@@ -39,4 +39,3 @@ def normalize_policy_family(value: str) -> str:
 def policy_display_name(policy_family: str) -> str:
     normalized = normalize_policy_family(policy_family)
     return POLICY_FAMILIES.get(normalized, normalized.replace("_", " ").title())
-

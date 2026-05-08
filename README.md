@@ -4,6 +4,10 @@ Standalone tool for AI trust & safety and model-evaluation triage.
 
 The assistant ingests sanitized eval cases, groups related findings into explainable risk clusters, scores escalation priority, monitors eval health, and produces analyst-ready reports for human review.
 
+## Portfolio Scope
+
+This is a focused portfolio artifact, not a SaaS MVP. The goal is to demonstrate practical AI safety eval-ops judgment: transparent triage logic, safe fixture handling, reproducible reports, and clear human-review workflows.
+
 ## What It Does
 
 - Ingests sanitized synthetic eval cases from `fixtures/eval_cases.json`.
@@ -33,6 +37,7 @@ This project treats eval findings as triage signals rather than isolated benchma
 - **Signal reliability:** tracks missing labels, evaluator disagreement, stale cases, and low-reliability signals.
 - **Eval health:** distinguishes low observed risk from low eval coverage.
 - **Emerging risk register:** summarizes risk areas by severity, prevalence, exposure, trajectory, confidence, indicators, and mitigation options.
+- **Fixture sanity checks:** verifies the synthetic workflow against hand-authored demonstration labels without presenting the numbers as production safety performance.
 
 See [METHODOLOGY.md](METHODOLOGY.md) for implementation details and [DATA_CARD.md](DATA_CARD.md) for fixture scope and limitations.
 
@@ -41,7 +46,7 @@ See [METHODOLOGY.md](METHODOLOGY.md) for implementation details and [DATA_CARD.m
 ```bash
 pip install -r requirements.txt -r requirements-dev.txt
 make demo
-make test
+make check
 make dashboard
 ```
 

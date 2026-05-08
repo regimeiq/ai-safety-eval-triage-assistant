@@ -18,7 +18,9 @@ def _pair_key(left: str, right: str) -> tuple[str, str]:
 
 
 def compute_metrics(cases: list[TriageCase], escalation_threshold: float = 55.0) -> TriageMetrics:
-    predicted_escalations = {case.case_id for case in cases if case.escalation_score >= escalation_threshold}
+    predicted_escalations = {
+        case.case_id for case in cases if case.escalation_score >= escalation_threshold
+    }
     expected_escalations = {case.case_id for case in cases if case.human_escalate}
     tp = len(predicted_escalations & expected_escalations)
     fp = len(predicted_escalations - expected_escalations)
@@ -55,4 +57,3 @@ def compute_metrics(cases: list[TriageCase], escalation_threshold: float = 55.0)
         cluster_false_positives=cluster_fp,
         cluster_false_negatives=cluster_fn,
     )
-

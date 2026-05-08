@@ -23,18 +23,38 @@ def _md_cell(value: object) -> str:
 
 def render_evaluation_report(run: TriageRun) -> str:
     metrics = run.metrics
+    risk_register_entries = build_risk_register(run)
+    escalation_ready = sum(case.escalation_tier in {"CRITICAL", "ELEVATED"} for case in run.cases)
+    health_flags = (
+        run.health.missing_label_count
+        + run.health.evaluator_disagreement_count
+        + run.health.low_reliability_count
+        + run.health.stale_case_count
+        + len(run.health.blind_spot_policies)
+    )
     lines = [
         "# AI Safety Eval Triage: Evaluation Report",
         "",
         f"Generated: {run.generated_at.isoformat()}",
+        f"Analysis as of: {run.analysis_as_of.isoformat()}",
         f"Taxonomy version: `{run.taxonomy_version}`",
         "",
-        "## Summary Metrics",
+        "## Workflow Summary",
         "",
         "| Metric | Value |",
         "|---|---:|",
         f"| Cases | {len(run.cases)} |",
+        f"| Cases to review | {escalation_ready} |",
         f"| Risk clusters | {len(run.clusters)} |",
+        f"| Risk register entries | {len(risk_register_entries)} |",
+        f"| Eval health flags | {health_flags} |",
+        "",
+        "## Synthetic Fixture Checks",
+        "",
+        "These checks verify the fixture workflow against hand-authored demonstration labels; they are not production safety-performance claims.",
+        "",
+        "| Metric | Value |",
+        "|---|---:|",
         f"| Escalation precision | {metrics.escalation_precision:.3f} |",
         f"| Escalation recall | {metrics.escalation_recall:.3f} |",
         f"| Escalation F1 | {metrics.escalation_f1:.3f} |",
@@ -81,6 +101,7 @@ def render_health_heartbeat(run: TriageRun) -> str:
         "# Eval Health Heartbeat",
         "",
         f"Generated: {run.generated_at.isoformat()}",
+        f"Analysis as of: {run.analysis_as_of.isoformat()}",
         "",
         "## Fleet Summary",
         "",
@@ -128,6 +149,7 @@ def render_casepack(run: TriageRun, cluster_id: str | None = None) -> str:
         "# Demo Risk Cluster Casepack",
         "",
         f"Generated: {run.generated_at.isoformat()}",
+        f"Analysis as of: {run.analysis_as_of.isoformat()}",
         f"Cluster: `{cluster.cluster_id}`",
         "",
         "## Executive Summary",
@@ -165,6 +187,7 @@ def render_risk_register(run: TriageRun) -> str:
         "# Emerging AI Risk Register",
         "",
         f"Generated: {run.generated_at.isoformat()}",
+        f"Analysis as of: {run.analysis_as_of.isoformat()}",
         "",
         "This register is a scoped demonstration artifact derived from synthetic eval fixtures. It is intended to demonstrate emerging-risk triage, not estimate production prevalence.",
         "",
@@ -219,6 +242,7 @@ def render_error_analysis(run: TriageRun, escalation_threshold: float = 55.0) ->
         "# Error Analysis",
         "",
         f"Generated: {run.generated_at.isoformat()}",
+        f"Analysis as of: {run.analysis_as_of.isoformat()}",
         "",
         "This report is generated from the synthetic fixture benchmark. It is intended to make failure modes reviewable, not to estimate production performance.",
         "",
@@ -311,7 +335,9 @@ def write_run_json(run: TriageRun, path: str | Path) -> None:
     )
 
 
-def write_reports(run: TriageRun, docs_dir: str | Path = "docs", out_dir: str | Path = "out") -> None:
+def write_reports(
+    run: TriageRun, docs_dir: str | Path = "docs", out_dir: str | Path = "out"
+) -> None:
     docs = Path(docs_dir)
     docs.mkdir(parents=True, exist_ok=True)
     Path(out_dir).mkdir(parents=True, exist_ok=True)

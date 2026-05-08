@@ -54,6 +54,7 @@ The public fixture uses summaries rather than full prompts or full responses. Va
 - Labels are hand-authored for demonstration, not produced through a multi-rater adjudication process.
 - Harm categories are intentionally broad.
 - Metrics are valid only for this fixture benchmark.
+- Time-based health outputs are computed from the run's fixture-derived `analysis_as_of` timestamp for reproducibility.
 - Redacted summaries are safer for public display but less expressive than full eval records.
 
 ## Safety Handling
@@ -64,4 +65,3 @@ The public fixture uses summaries rather than full prompts or full responses. Va
 - No external network calls.
 - No verbatim harmful prompt corpus.
 - Generated reports reiterate that results are scoped demonstration outputs.
-

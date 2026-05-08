@@ -11,7 +11,9 @@ def _rate(count: int, total: int) -> float:
     return round(count / total, 4) if total else 0.0
 
 
-def build_health_snapshot(cases: list[TriageCase], now: datetime | None = None) -> EvalHealthSnapshot:
+def build_health_snapshot(
+    cases: list[TriageCase], now: datetime | None = None
+) -> EvalHealthSnapshot:
     now = now or datetime.now(timezone.utc)
     total = len(cases)
     missing_label_count = sum(
@@ -26,7 +28,9 @@ def build_health_snapshot(cases: list[TriageCase], now: datetime | None = None) 
     )
     low_reliability_count = sum(1 for case in cases if case.signal_reliability < 0.55)
     stale_count = sum(1 for case in cases if (now - case.created_at).days > 30)
-    coverage_by_policy = dict(sorted(Counter(case.normalized_policy_family for case in cases).items()))
+    coverage_by_policy = dict(
+        sorted(Counter(case.normalized_policy_family for case in cases).items())
+    )
 
     return EvalHealthSnapshot(
         total_cases=total,
@@ -42,4 +46,3 @@ def build_health_snapshot(cases: list[TriageCase], now: datetime | None = None) 
         stale_case_count=stale_count,
         blind_spot_policies=sorted(set(POLICY_FAMILIES) - set(coverage_by_policy)),
     )
-

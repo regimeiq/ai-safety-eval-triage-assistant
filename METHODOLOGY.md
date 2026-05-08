@@ -6,13 +6,15 @@ The assistant turns AI safety eval findings into reviewable triage artifacts: ra
 
 It is human-in-the-loop decision support. It does not automate enforcement or claim production safety performance.
 
+The project is intentionally portfolio-scoped: it favors a defensible end-to-end eval workflow over full SaaS concerns such as authentication, tenancy, billing, background jobs, or live data ingestion.
+
 ## Pipeline
 
 1. **Ingest:** Load fixture or imported CSV/JSON cases and validate them with Pydantic.
 2. **Normalize:** Map policy-family aliases into a consistent taxonomy.
 3. **Score:** Assign a deterministic escalation score using severity, evaluator label, attack style, evasion signals, signal reliability, missing labels, and cluster recurrence.
 4. **Cluster:** Build TF-IDF representations over redacted summaries plus policy/attack metadata, then link cases with transparent reason codes.
-5. **Evaluate:** Compare escalation decisions against `human_escalate` and cluster links against `gold_cluster_id`.
+5. **Check fixture behavior:** Compare escalation decisions against `human_escalate` and cluster links against `gold_cluster_id`.
 6. **Monitor:** Summarize coverage, missing labels, evaluator disagreement, low-reliability signals, stale cases, and blind-spot policy families.
 7. **Report:** Generate Markdown artifacts and a Streamlit dashboard for human review.
 
@@ -55,7 +57,9 @@ The project reports:
 - evaluator disagreement rate
 - low-reliability and stale-case counts
 
-Metrics are scoped to the synthetic fixture benchmark.
+Metrics are scoped to the synthetic fixture benchmark and serve as sanity checks for the workflow, not model-performance claims.
+
+Time-based health checks use the fixture run's `analysis_as_of` timestamp, derived from the newest case in the run, so stale-case and trajectory outputs remain reproducible as the calendar advances.
 
 ## Risk Register
 

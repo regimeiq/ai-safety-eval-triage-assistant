@@ -108,5 +108,9 @@ def apply_recurrence_adjustment(case: TriageCase, cluster_size: int) -> TriageCa
     score = min(100.0, round(case.escalation_score + min(10.0, 3.0 * (cluster_size - 1)), 1))
     reasons = sorted(set([*case.reason_codes, "RECURRING_CLUSTER"]))
     return case.model_copy(
-        update={"escalation_score": score, "escalation_tier": escalation_tier(score), "reason_codes": reasons}
+        update={
+            "escalation_score": score,
+            "escalation_tier": escalation_tier(score),
+            "reason_codes": reasons,
+        }
     )
