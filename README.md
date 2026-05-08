@@ -34,6 +34,8 @@ This project treats eval findings as triage signals rather than isolated benchma
 - **Eval health:** distinguishes low observed risk from low eval coverage.
 - **Emerging risk register:** summarizes risk areas by severity, prevalence, exposure, trajectory, confidence, indicators, and mitigation options.
 
+See [METHODOLOGY.md](METHODOLOGY.md) for implementation details and [DATA_CARD.md](DATA_CARD.md) for fixture scope and limitations.
+
 ## Quick Start
 
 ```bash

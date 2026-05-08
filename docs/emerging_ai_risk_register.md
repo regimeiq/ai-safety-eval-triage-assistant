@@ -1,6 +1,6 @@
 # Emerging AI Risk Register
 
-Generated: 2026-05-08T00:47:29.680529+00:00
+Generated: 2026-05-08T13:29:24.667968+00:00
 
 This register is a scoped demonstration artifact derived from synthetic eval fixtures. It is intended to demonstrate emerging-risk triage, not estimate production prevalence.
 

@@ -14,7 +14,11 @@ def _pct(value: float) -> str:
 
 
 def _table_rows(mapping: dict[str, int]) -> str:
-    return "\n".join(f"| {key} | {value} |" for key, value in mapping.items())
+    return "\n".join(f"| {_md_cell(key)} | {value} |" for key, value in mapping.items())
+
+
+def _md_cell(value: object) -> str:
+    return str(value).replace("\n", " ").replace("|", "\\|")
 
 
 def render_evaluation_report(run: TriageRun) -> str:
@@ -48,12 +52,12 @@ def render_evaluation_report(run: TriageRun) -> str:
             "| "
             + " | ".join(
                 [
-                    case.case_id,
-                    case.escalation_tier,
+                    _md_cell(case.case_id),
+                    _md_cell(case.escalation_tier),
                     f"{case.escalation_score:.1f}",
-                    policy_display_name(case.normalized_policy_family),
-                    case.evaluator_label,
-                    ", ".join(case.reason_codes[:5]),
+                    _md_cell(policy_display_name(case.normalized_policy_family)),
+                    _md_cell(case.evaluator_label),
+                    _md_cell(", ".join(case.reason_codes[:5])),
                 ]
             )
             + " |"
@@ -172,16 +176,16 @@ def render_risk_register(run: TriageRun) -> str:
             "| "
             + " | ".join(
                 [
-                    entry.risk_area,
-                    entry.abuse_pathway,
-                    entry.severity,
-                    entry.prevalence,
-                    entry.exposure,
-                    entry.trajectory,
-                    entry.confidence,
+                    _md_cell(entry.risk_area),
+                    _md_cell(entry.abuse_pathway),
+                    _md_cell(entry.severity),
+                    _md_cell(entry.prevalence),
+                    _md_cell(entry.exposure),
+                    _md_cell(entry.trajectory),
+                    _md_cell(entry.confidence),
                     f"{entry.risk_score:.1f}",
-                    "; ".join(entry.monitoring_signals),
-                    entry.recommended_mitigation,
+                    _md_cell("; ".join(entry.monitoring_signals)),
+                    _md_cell(entry.recommended_mitigation),
                 ]
             )
             + " |"
