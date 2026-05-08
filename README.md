@@ -14,6 +14,16 @@ The assistant ingests sanitized eval cases, groups related findings into explain
 - Produces an emerging AI risk register with early indicators, severity, prevalence, exposure, trajectory, confidence, and mitigation recommendations.
 - Generates Markdown reports and a Streamlit analyst queue.
 
+## Analytical Approach
+
+This project treats eval findings as triage signals rather than isolated benchmark rows.
+
+- **Policy taxonomy:** normalizes cases into harm/risk families before scoring.
+- **Weak-signal clustering:** groups related findings by policy family, attack style, evasion signals, and text similarity.
+- **Signal reliability:** tracks missing labels, evaluator disagreement, stale cases, and low-reliability signals.
+- **Eval health:** distinguishes low observed risk from low eval coverage.
+- **Emerging risk register:** summarizes risk areas by severity, prevalence, exposure, trajectory, confidence, indicators, and mitigation options.
+
 ## Quick Start
 
 ```bash
