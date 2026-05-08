@@ -27,3 +27,10 @@ def test_escalation_metrics_are_nonzero() -> None:
     assert run.metrics.escalation_precision >= 0.7
     assert run.metrics.escalation_recall >= 0.7
 
+
+def test_unlabeled_case_is_not_model_judge_disagreement() -> None:
+    version, cases = load_eval_cases("fixtures/eval_cases.json")
+    run = run_triage(cases, version)
+    by_id = {case.case_id: case for case in run.cases}
+    assert "MISSING_LABEL" in by_id["CASE-018"].reason_codes
+    assert "MODEL_JUDGE_DISAGREEMENT" not in by_id["CASE-018"].reason_codes

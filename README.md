@@ -49,6 +49,7 @@ Generated artifacts:
 - `docs/eval_health_heartbeat.md`
 - `docs/demo_casepack.md`
 - `docs/emerging_ai_risk_register.md`
+- `docs/error_analysis.md`
 - `out/triage_run.json`
 
 ## Scope Guardrails

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from itertools import combinations
 from pathlib import Path
 
 from ai_safety_eval_triage.models import RiskCluster, TriageCase, TriageRun
@@ -201,6 +202,61 @@ def render_risk_register(run: TriageRun) -> str:
     return "\n".join(lines) + "\n"
 
 
+def render_error_analysis(run: TriageRun, escalation_threshold: float = 55.0) -> str:
+    predicted_escalations = {
+        case.case_id for case in run.cases if case.escalation_score >= escalation_threshold
+    }
+    expected_escalations = {case.case_id for case in run.cases if case.human_escalate}
+    false_positives = sorted(predicted_escalations - expected_escalations)
+    false_negatives = sorted(expected_escalations - predicted_escalations)
+    over_merged, under_merged = _cluster_errors(run)
+
+    lines = [
+        "# Error Analysis",
+        "",
+        f"Generated: {run.generated_at.isoformat()}",
+        "",
+        "This report is generated from the synthetic fixture benchmark. It is intended to make failure modes reviewable, not to estimate production performance.",
+        "",
+        "## Escalation Errors",
+        "",
+        f"- False positives: **{len(false_positives)}**",
+        f"- False negatives: **{len(false_negatives)}**",
+        "",
+        "### False Positives",
+        "",
+    ]
+    lines.extend(_case_bullets(run, false_positives) or ["- None in this fixture run."])
+    lines.extend(["", "### False Negatives", ""])
+    lines.extend(_case_bullets(run, false_negatives) or ["- None in this fixture run."])
+    lines.extend(
+        [
+            "",
+            "## Clustering Errors",
+            "",
+            f"- Over-merged pairs: **{len(over_merged)}**",
+            f"- Under-merged pairs: **{len(under_merged)}**",
+            "",
+            "### Over-Merged Pairs",
+            "",
+        ]
+    )
+    lines.extend(_pair_bullets(over_merged) or ["- None in this fixture run."])
+    lines.extend(["", "### Under-Merged Pairs", ""])
+    lines.extend(_pair_bullets(under_merged) or ["- None in this fixture run."])
+    lines.extend(
+        [
+            "",
+            "## Review Notes",
+            "",
+            "- False positives are useful for tuning analyst workload and over-escalation pressure.",
+            "- False negatives are higher priority because they represent missed escalation opportunities.",
+            "- Over-merged clusters can hide distinct policy issues; under-merged clusters can fragment recurring risk patterns.",
+        ]
+    )
+    return "\n".join(lines) + "\n"
+
+
 def _select_cluster(run: TriageRun, cluster_id: str | None = None) -> RiskCluster:
     if cluster_id:
         for cluster in run.clusters:
@@ -208,6 +264,38 @@ def _select_cluster(run: TriageRun, cluster_id: str | None = None) -> RiskCluste
                 return cluster
         raise ValueError(f"Cluster not found: {cluster_id}")
     return sorted(run.clusters, key=lambda cluster: (-cluster.max_score, -cluster.size))[0]
+
+
+def _case_bullets(run: TriageRun, case_ids: list[str]) -> list[str]:
+    cases = {case.case_id: case for case in run.cases}
+    return [
+        f"- **{case_id}** ({cases[case_id].escalation_tier}, {cases[case_id].escalation_score:.1f}): "
+        f"{cases[case_id].prompt_summary}"
+        for case_id in case_ids
+        if case_id in cases
+    ]
+
+
+def _pair_key(left: TriageCase, right: TriageCase) -> tuple[str, str]:
+    return tuple(sorted((left.case_id, right.case_id)))
+
+
+def _cluster_errors(run: TriageRun) -> tuple[list[tuple[str, str]], list[tuple[str, str]]]:
+    predicted_pairs = {
+        _pair_key(left, right)
+        for left, right in combinations(run.cases, 2)
+        if left.cluster_id == right.cluster_id
+    }
+    expected_pairs = {
+        _pair_key(left, right)
+        for left, right in combinations(run.cases, 2)
+        if left.gold_cluster_id == right.gold_cluster_id
+    }
+    return sorted(predicted_pairs - expected_pairs), sorted(expected_pairs - predicted_pairs)
+
+
+def _pair_bullets(pairs: list[tuple[str, str]]) -> list[str]:
+    return [f"- `{left}` / `{right}`" for left, right in pairs]
 
 
 def write_run_json(run: TriageRun, path: str | Path) -> None:
@@ -227,4 +315,5 @@ def write_reports(run: TriageRun, docs_dir: str | Path = "docs", out_dir: str | 
     (docs / "eval_health_heartbeat.md").write_text(render_health_heartbeat(run), encoding="utf-8")
     (docs / "demo_casepack.md").write_text(render_casepack(run), encoding="utf-8")
     (docs / "emerging_ai_risk_register.md").write_text(render_risk_register(run), encoding="utf-8")
+    (docs / "error_analysis.md").write_text(render_error_analysis(run), encoding="utf-8")
     write_run_json(run, Path(out_dir) / "triage_run.json")

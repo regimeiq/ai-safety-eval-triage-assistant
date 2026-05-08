@@ -16,6 +16,7 @@ def main() -> None:
     print("  docs/eval_health_heartbeat.md")
     print("  docs/demo_casepack.md")
     print("  docs/emerging_ai_risk_register.md")
+    print("  docs/error_analysis.md")
     print("  out/triage_run.json")
 
 

@@ -54,7 +54,10 @@ def score_case(case: EvalCase) -> TriageCase:
         score -= 10.0
         reason_codes.append("EVALUATOR_SAFE")
 
-    if case.expected_label != case.evaluator_label:
+    if "unlabeled" in {case.expected_label, case.evaluator_label}:
+        score += 4.0
+        reason_codes.append("MISSING_LABEL")
+    elif case.expected_label != case.evaluator_label:
         score += 8.0
         reason_codes.append("MODEL_JUDGE_DISAGREEMENT")
 
@@ -107,4 +110,3 @@ def apply_recurrence_adjustment(case: TriageCase, cluster_size: int) -> TriageCa
     return case.model_copy(
         update={"escalation_score": score, "escalation_tier": escalation_tier(score), "reason_codes": reasons}
     )
-

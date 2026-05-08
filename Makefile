@@ -1,4 +1,4 @@
-.PHONY: demo dashboard evaluate heartbeat casepack risk-register test clean help
+.PHONY: demo dashboard evaluate heartbeat casepack risk-register import-demo test clean help
 
 PYTHONPATH := src
 
@@ -23,6 +23,12 @@ casepack: ## Generate demo cluster casepack
 
 risk-register: ## Generate emerging AI risk register
 	PYTHONPATH=$(PYTHONPATH) python scripts/generate_risk_register.py
+
+error-analysis: ## Generate error analysis report
+	PYTHONPATH=$(PYTHONPATH) python scripts/generate_error_analysis.py
+
+import-demo: ## Normalize the fixture data through the generic import adapter
+	PYTHONPATH=$(PYTHONPATH) python scripts/import_cases.py --input fixtures/eval_cases.json --output out/imported_eval_cases.json --format json
 
 test: ## Run pytest suite
 	PYTHONPATH=$(PYTHONPATH) python -m pytest tests/ -v

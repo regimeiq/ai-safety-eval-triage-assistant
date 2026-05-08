@@ -46,6 +46,7 @@ def _link_reasons(left: TriageCase, right: TriageCase, similarity: float) -> lis
         non_benign_policy
         and left.attack_style == right.attack_style
         and left.attack_style != "benign_control"
+        and similarity >= 0.16
     )
     strong_policy_link = same_policy and similarity >= 0.12 and (
         bool(shared_signals) or left.attack_style == right.attack_style
