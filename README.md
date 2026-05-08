@@ -14,6 +14,16 @@ The assistant ingests sanitized eval cases, groups related findings into explain
 - Produces an emerging AI risk register with early indicators, severity, prevalence, exposure, trajectory, confidence, and mitigation recommendations.
 - Generates Markdown reports and a Streamlit analyst queue.
 
+## Screenshots
+
+| Overview | Triage Queue |
+|---|---|
+| ![Overview dashboard](docs/screenshots/overview.png) | ![Triage queue](docs/screenshots/triage_queue.png) |
+
+| Emerging AI Risk Register |
+|---|
+| ![Emerging AI risk register](docs/screenshots/risk_register.png) |
+
 ## Analytical Approach
 
 This project treats eval findings as triage signals rather than isolated benchmark rows.

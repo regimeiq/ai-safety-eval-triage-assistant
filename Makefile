@@ -10,7 +10,7 @@ demo: ## Run fixture triage and generate all demo artifacts
 	PYTHONPATH=$(PYTHONPATH) python scripts/run_demo.py
 
 dashboard: ## Launch Streamlit dashboard on :8501
-	PYTHONPATH=$(PYTHONPATH) streamlit run dashboard/app.py --server.port 8501 --server.headless true
+	PYTHONPATH=$(PYTHONPATH) python -m streamlit run dashboard/app.py --server.port 8501 --server.headless true
 
 evaluate: ## Generate evaluation report
 	PYTHONPATH=$(PYTHONPATH) python scripts/generate_evaluation_report.py
