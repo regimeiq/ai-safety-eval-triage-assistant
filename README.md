@@ -4,9 +4,20 @@ Standalone tool for AI trust & safety and model-evaluation triage.
 
 The assistant ingests sanitized eval cases, groups related findings into explainable risk clusters, scores escalation priority, monitors eval health, and produces analyst-ready reports for human review.
 
-## Portfolio Scope
+## What This Demonstrates
 
-This is a focused portfolio artifact, not a SaaS MVP. The goal is to demonstrate practical AI safety eval-ops judgment: transparent triage logic, safe fixture handling, reproducible reports, and clear human-review workflows.
+This project treats AI safety eval findings as an analyst triage problem: noisy adversarial cases need to be normalized, grouped, scored, reviewed, and turned into defensible reporting. The workflow emphasizes transparent escalation logic, eval-health monitoring, and human review rather than black-box automation.
+
+Review points:
+
+- **Triage discipline:** escalation scores are paired with transparent reason codes rather than opaque labels.
+- **Eval-health awareness:** the project distinguishes low observed risk from missing labels, stale cases, evaluator disagreement, and weak coverage.
+- **Human-review posture:** outputs support analyst judgment; they do not claim autonomous enforcement or production safety authority.
+- **Reproducibility:** reports, casepacks, fixture sanity checks, and dashboard views can be regenerated from local synthetic fixtures.
+
+## Scope / Limitations
+
+This is a scoped local demonstration, not a SaaS MVP. It focuses on transparent triage logic, safe fixture handling, reproducible reports, and clear human-review workflows.
 
 ## What It Does
 
