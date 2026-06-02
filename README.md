@@ -4,6 +4,8 @@ Local triage workflow for redacted AI safety eval-style cases.
 
 The tool ingests sanitized cases, scores review priority with transparent reason codes, clusters related failures into risk families, tracks eval-health issues, and exports review artifacts for human analysis.
 
+Portfolio page: https://wksprojects.com/ai-safety-eval-triage-assistant/
+
 ## What It Evaluates
 
 - Redacted adversarial or policy-boundary eval cases
