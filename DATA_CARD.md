@@ -9,6 +9,7 @@ The default dataset is `fixtures/eval_cases.json`, a synthetic, redacted set of 
 - Demonstrate ingestion, validation, scoring, clustering, eval-health telemetry, error analysis, and emerging-risk reporting.
 - Provide a safe public demo without live user data, personally identifiable information, harmful prompt corpora, external API calls, or benchmark downloads.
 - Support local experimentation with the import adapter for benchmark-style CSV/JSON exports.
+- Generate review artifacts in `outputs/` that make the triage queue, risk clusters, and risk register inspectable outside the dashboard.
 
 ## Not Intended For
 
@@ -17,6 +18,7 @@ The default dataset is `fixtures/eval_cases.json`, a synthetic, redacted set of 
 - Claiming official benchmark performance.
 - Evaluating a deployed model provider.
 - Publishing verbatim harmful prompts or sensitive user content.
+- Claiming operational use of public incident data.
 
 ## Schema
 
@@ -56,6 +58,7 @@ The public fixture uses summaries rather than full prompts or full responses. Va
 - Metrics are valid only for this fixture benchmark.
 - Time-based health outputs are computed from the run's fixture-derived `analysis_as_of` timestamp for reproducibility.
 - Redacted summaries are safer for public display but less expressive than full eval records.
+- Public incident datasets are discussed as companion material in `docs/public_incident_companion.md`, but are not downloaded or ingested by default.
 
 ## Safety Handling
 

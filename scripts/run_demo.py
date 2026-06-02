@@ -19,6 +19,10 @@ def main() -> None:
     print("  docs/demo_casepack.md")
     print("  docs/emerging_ai_risk_register.md")
     print("  docs/error_analysis.md")
+    print("  outputs/summary.md")
+    print("  outputs/triage_queue.csv")
+    print("  outputs/risk_clusters.csv")
+    print("  outputs/risk_register.csv")
     print("  out/triage_run.json")
 
 

@@ -1,33 +1,62 @@
 # AI Safety Eval Triage Assistant
 
-Standalone tool for AI trust & safety and model-evaluation triage.
+Local triage workflow for redacted AI safety eval-style cases.
 
-The assistant ingests sanitized eval cases, groups related findings into explainable risk clusters, scores escalation priority, monitors eval health, and produces analyst-ready reports for human review.
+The tool ingests sanitized cases, scores review priority with transparent reason codes, clusters related failures into risk families, tracks eval-health issues, and exports review artifacts for human analysis.
 
-## What This Demonstrates
+## What It Evaluates
 
-This project treats AI safety eval findings as an analyst triage problem: noisy adversarial cases need to be normalized, grouped, scored, reviewed, and turned into defensible reporting. The workflow emphasizes transparent escalation logic, eval-health monitoring, and human review rather than black-box automation.
+- Redacted adversarial or policy-boundary eval cases
+- Policy family, severity, evaluator label, attack style, evasion signals, and signal reliability
+- Recurring risk patterns across cases, models, datasets, and attack styles
+- Eval-health signals such as missing labels, stale cases, evaluator disagreement, low reliability, and policy coverage gaps
 
-Review points:
+The default data in `fixtures/eval_cases.json` is synthetic and summarized. It does not include live user data, proprietary evals, full prompts, or provider-specific model access.
 
-- **Triage discipline:** escalation scores are paired with transparent reason codes rather than opaque labels.
-- **Eval-health awareness:** the project distinguishes low observed risk from missing labels, stale cases, evaluator disagreement, and weak coverage.
-- **Human-review posture:** outputs support analyst judgment; they do not claim autonomous enforcement or production safety authority.
-- **Reproducibility:** reports, casepacks, fixture sanity checks, and dashboard views can be regenerated from local synthetic fixtures.
+## How Cases Are Scored
 
-## Scope / Limitations
+Each case receives a deterministic escalation score from 0 to 100. The score combines severity, policy family, evaluator outcome, attack style, evasion signals, missing-label status, signal reliability, and cluster recurrence.
 
-This is a scoped local demonstration, not a SaaS MVP. It focuses on transparent triage logic, safe fixture handling, reproducible reports, and clear human-review workflows.
+Scores are queue-prioritization signals, not calibrated probabilities.
 
-## What It Does
+| Tier | Score Range | Review Posture |
+|---|---:|---|
+| CRITICAL | 75-100 | Immediate analyst review |
+| ELEVATED | 55-74.9 | Near-term review |
+| WATCH | 35-54.9 | Watchlist or calibration review |
+| LOW | 0-34.9 | Control or low-priority review |
 
-- Ingests sanitized synthetic eval cases from `fixtures/eval_cases.json`.
-- Normalizes policy families and evaluator labels.
-- Scores escalation priority with transparent reason codes.
-- Clusters related cases into explainable risk families.
-- Tracks eval health: coverage gaps, stale runs, missing labels, evaluator disagreement, and low-reliability signals.
-- Produces an emerging AI risk register with early indicators, severity, prevalence, exposure, trajectory, confidence, and mitigation recommendations.
-- Generates Markdown reports and a Streamlit analyst queue.
+## Outputs
+
+Run the demo:
+
+```bash
+pip install -r requirements.txt -r requirements-dev.txt
+make demo
+make check
+```
+
+Generated review artifacts:
+
+- `outputs/summary.md`: run summary, review tiers, top clusters, and scope notes
+- `outputs/triage_queue.csv`: ranked review queue with score, tier, reason codes, cluster, and summaries
+- `outputs/risk_clusters.csv`: cluster table with shared signals, member cases, and rationale
+- `outputs/risk_register.csv`: risk areas with severity, exposure, trajectory, confidence, monitoring signals, and mitigation options
+- `docs/evaluation_report.md`: workflow metrics and highest-priority cases
+- `docs/eval_health_heartbeat.md`: eval health summary
+- `docs/demo_casepack.md`: representative risk-cluster casepack
+- `docs/emerging_ai_risk_register.md`: Markdown risk register
+- `docs/error_analysis.md`: fixture false positives, false negatives, and cluster errors
+- `out/triage_run.json`: complete serialized run object
+
+## Review Prioritization
+
+The queue is sorted by escalation score and then reviewed by tier:
+
+1. Critical and elevated cases go to analyst review first.
+2. Related cases are grouped into explainable clusters so recurring patterns are reviewed together.
+3. Eval-health flags prevent over-interpreting weak coverage, stale cases, missing labels, or low-reliability records.
+4. The risk register summarizes non-low clusters into severity, prevalence, exposure, trajectory, confidence, indicators, and recommended mitigations.
 
 ## Screenshots
 
@@ -39,40 +68,16 @@ This is a scoped local demonstration, not a SaaS MVP. It focuses on transparent 
 |---|
 | ![Emerging AI risk register](docs/screenshots/risk_register.png) |
 
-## Analytical Approach
+## Methodology And Scope
 
-This project treats eval findings as triage signals rather than isolated benchmark rows.
+- [docs/methodology.md](docs/methodology.md)
+- [docs/limitations.md](docs/limitations.md)
+- [docs/public_incident_companion.md](docs/public_incident_companion.md)
+- [DATA_CARD.md](DATA_CARD.md)
 
-- **Policy taxonomy:** normalizes cases into harm/risk families before scoring.
-- **Weak-signal clustering:** groups related findings by policy family, attack style, evasion signals, and text similarity.
-- **Signal reliability:** tracks missing labels, evaluator disagreement, stale cases, and low-reliability signals.
-- **Eval health:** distinguishes low observed risk from low eval coverage.
-- **Emerging risk register:** summarizes risk areas by severity, prevalence, exposure, trajectory, confidence, indicators, and mitigation options.
-- **Fixture sanity checks:** verifies the synthetic workflow against hand-authored demonstration labels without presenting the numbers as production safety performance.
+Scope guardrails:
 
-See [METHODOLOGY.md](METHODOLOGY.md) for implementation details and [DATA_CARD.md](DATA_CARD.md) for fixture scope and limitations.
-
-## Quick Start
-
-```bash
-pip install -r requirements.txt -r requirements-dev.txt
-make demo
-make check
-make dashboard
-```
-
-Generated artifacts:
-
-- `docs/evaluation_report.md`
-- `docs/eval_health_heartbeat.md`
-- `docs/demo_casepack.md`
-- `docs/emerging_ai_risk_register.md`
-- `docs/error_analysis.md`
-- `out/triage_run.json`
-
-## Scope Guardrails
-
-- Fixture-first and redacted-summary-only.
-- No live user data, PII, external APIs, or benchmark downloads.
-- No production safety, official benchmark, or automated enforcement claims.
-- Human-in-the-loop decision support, not autonomous policy enforcement.
+- Public-safe synthetic fixture by default
+- Redacted summaries only
+- No live user data, PII, external APIs, benchmark downloads, or operational deployment claims
+- Human-in-the-loop decision support, not automated enforcement

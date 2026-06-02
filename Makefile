@@ -47,4 +47,5 @@ check: lint test ## Run lint and tests
 clean: ## Remove generated runtime artifacts
 	rm -f out/triage_run.json out/imported_eval_cases.json
 	rm -f docs/evaluation_report.md docs/eval_health_heartbeat.md docs/demo_casepack.md docs/emerging_ai_risk_register.md docs/error_analysis.md
+	rm -f outputs/summary.md outputs/triage_queue.csv outputs/risk_clusters.csv outputs/risk_register.csv
 	@echo "Cleaned generated demo artifacts."
