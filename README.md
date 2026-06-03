@@ -2,7 +2,7 @@
 
 Local triage workflow for redacted AI safety eval-style cases.
 
-The tool ingests sanitized cases, scores review priority with transparent reason codes, clusters related failures into risk families, tracks eval-health issues, and exports review artifacts for human analysis.
+The workflow ingests sanitized cases, scores review priority with transparent reason codes, clusters related failures into risk families, tracks eval-health issues, and exports review artifacts for human analysis.
 
 Portfolio page: https://wksprojects.com/ai-safety-eval-triage-assistant/
 
@@ -64,7 +64,7 @@ The queue is sorted by escalation score and then reviewed by tier:
 
 | Overview | Triage Queue |
 |---|---|
-| ![Overview dashboard](docs/screenshots/overview.png) | ![Triage queue](docs/screenshots/triage_queue.png) |
+| ![Overview screenshot](docs/screenshots/overview.png) | ![Triage queue](docs/screenshots/triage_queue.png) |
 
 | Emerging AI Risk Register |
 |---|
@@ -82,4 +82,4 @@ Scope guardrails:
 - Public-safe synthetic fixture by default
 - Redacted summaries only
 - No live user data, PII, external APIs, benchmark downloads, or operational deployment claims
-- Human-in-the-loop decision support, not automated enforcement
+- Human review workflow, not automated enforcement
