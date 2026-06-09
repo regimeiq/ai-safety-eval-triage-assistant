@@ -82,7 +82,6 @@ def assign_clusters(
 
     adjacency: dict[str, set[str]] = {case.case_id: set() for case in cases}
     pair_reasons: dict[tuple[str, str], list[str]] = {}
-    case_by_id = {case.case_id: case for case in cases}
 
     for i, j in combinations(range(len(cases)), 2):
         left, right = cases[i], cases[j]
@@ -117,8 +116,7 @@ def assign_clusters(
             cluster_id_by_case[case_id] = cluster_id
 
     assigned = [
-        case_by_id[case.case_id].model_copy(update={"cluster_id": cluster_id_by_case[case.case_id]})
-        for case in cases
+        case.model_copy(update={"cluster_id": cluster_id_by_case[case.case_id]}) for case in cases
     ]
     return assigned, pair_reasons
 

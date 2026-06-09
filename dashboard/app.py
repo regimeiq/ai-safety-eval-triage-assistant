@@ -33,16 +33,20 @@ def main() -> None:
     st.set_page_config(page_title="AI Safety Eval Triage", layout="wide")
 
     @st.cache_data(show_spinner=False)
-    def load_run() -> dict:
+    def load_run(run_file_mtime: float | None) -> dict:
+        # run_file_mtime keys the cache so a regenerated out/triage_run.json
+        # is picked up without restarting Streamlit.
         out_path = ROOT / "out" / "triage_run.json"
-        if out_path.exists():
+        if run_file_mtime is not None and out_path.exists():
             payload = json.loads(out_path.read_text(encoding="utf-8"))
             if "analysis_as_of" in payload:
                 return payload
         taxonomy_version, cases = load_eval_cases(ROOT / "fixtures" / "eval_cases.json")
         return run_triage(cases, taxonomy_version).model_dump(mode="json")
 
-    run = TriageRun.model_validate(load_run())
+    run_json_path = ROOT / "out" / "triage_run.json"
+    run_json_mtime = run_json_path.stat().st_mtime if run_json_path.exists() else None
+    run = TriageRun.model_validate(load_run(run_json_mtime))
     case_df = pd.DataFrame([case.model_dump(mode="json") for case in run.cases])
     risk_entries = build_risk_register(run)
 

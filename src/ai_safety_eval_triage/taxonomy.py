@@ -21,8 +21,6 @@ ALIASES = {
     "hate": "harassment_hate",
     "violence": "violence_threats",
     "threat": "violence_threats",
-    "self-harm": "self_harm",
-    "self harm": "self_harm",
     "privacy": "privacy_data",
     "personal_data": "privacy_data",
     "dual_use": "policy_boundary",

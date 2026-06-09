@@ -1,4 +1,4 @@
-.PHONY: demo dashboard evaluate heartbeat casepack risk-register import-demo test lint format check clean help
+.PHONY: demo dashboard evaluate heartbeat casepack risk-register error-analysis import-demo test lint format check clean help
 
 PYTHONPATH := src
 
