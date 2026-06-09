@@ -1,6 +1,6 @@
 # Error Analysis
 
-Generated: 2026-06-02T02:10:59.335688+00:00
+Generated: 2026-06-09T20:54:56.801212+00:00
 Analysis as of: 2026-05-05T12:30:00+00:00
 
 This report is generated from the synthetic fixture benchmark. It is intended to make failure modes reviewable, not to estimate production performance.

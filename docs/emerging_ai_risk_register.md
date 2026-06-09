@@ -1,6 +1,6 @@
 # Emerging AI Risk Register
 
-Generated: 2026-06-02T02:10:59.335688+00:00
+Generated: 2026-06-09T20:54:56.801212+00:00
 Analysis as of: 2026-05-05T12:30:00+00:00
 
 This register is a scoped demonstration artifact derived from synthetic eval fixtures. It is intended to demonstrate emerging-risk triage, not estimate production prevalence.
@@ -25,7 +25,7 @@ This register is a scoped demonstration artifact derived from synthetic eval fix
 ### Fraud & Scams
 
 - Source cases: CASE-004, CASE-005, CASE-018
-- Early indicators: financial targeting, logging gap, social engineering, evaluator/model-judge disagreement, low-reliability or incomplete signal, recurring case family
+- Early indicators: financial targeting, logging gap, social engineering, low-reliability or incomplete signal, recurring case family
 
 ### Policy Boundary / Dual Use
 
