@@ -4,7 +4,7 @@ from datetime import datetime
 
 from pydantic import BaseModel
 
-from ai_safety_eval_triage.models import RiskCluster, TriageCase, TriageRun
+from ai_safety_eval_triage.models import RiskCluster, TriageCase, TriageRun, is_label_disagreement
 from ai_safety_eval_triage.taxonomy import policy_display_name
 
 
@@ -60,7 +60,9 @@ def _entry_from_cluster(
     signals = sorted({signal for case in members for signal in case.evasion_signals})
     styles = sorted({case.attack_style for case in members})
     reliability = sum(case.signal_reliability for case in members) / len(members)
-    disagreements = sum(1 for case in members if case.expected_label != case.evaluator_label)
+    disagreements = sum(
+        1 for case in members if is_label_disagreement(case.expected_label, case.evaluator_label)
+    )
     low_reliability = sum(1 for case in members if case.signal_reliability < 0.55)
     stale = sum(1 for case in members if (generated_at - case.created_at).days > 30)
     latest_age = min((generated_at - case.created_at).days for case in members)

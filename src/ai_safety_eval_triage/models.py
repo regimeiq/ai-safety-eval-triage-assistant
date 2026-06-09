@@ -9,6 +9,17 @@ EvalLabel = Literal["violation", "safe", "refusal", "ambiguous", "unlabeled"]
 Severity = Literal["low", "medium", "high", "critical"]
 
 
+def is_label_disagreement(expected: EvalLabel, evaluator: EvalLabel) -> bool:
+    """Return True when two assigned labels conflict.
+
+    'unlabeled' means the label is missing, which is tracked as a data-quality
+    issue rather than an evaluator disagreement.
+    """
+    if "unlabeled" in {expected, evaluator}:
+        return False
+    return expected != evaluator
+
+
 def _coerce_utc(value: datetime) -> datetime:
     """Treat naive timestamps as UTC so imported cases compare safely with tz-aware times."""
     if value.tzinfo is None:

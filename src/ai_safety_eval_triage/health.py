@@ -3,7 +3,7 @@ from __future__ import annotations
 from collections import Counter
 from datetime import datetime, timezone
 
-from ai_safety_eval_triage.models import EvalHealthSnapshot, TriageCase
+from ai_safety_eval_triage.models import EvalHealthSnapshot, TriageCase, is_label_disagreement
 from ai_safety_eval_triage.taxonomy import POLICY_FAMILIES
 
 
@@ -20,11 +20,7 @@ def build_health_snapshot(
         1 for case in cases if "unlabeled" in {case.expected_label, case.evaluator_label}
     )
     disagreement_count = sum(
-        1
-        for case in cases
-        if case.expected_label != "unlabeled"
-        and case.evaluator_label != "unlabeled"
-        and case.expected_label != case.evaluator_label
+        1 for case in cases if is_label_disagreement(case.expected_label, case.evaluator_label)
     )
     low_reliability_count = sum(1 for case in cases if case.signal_reliability < 0.55)
     stale_count = sum(1 for case in cases if (now - case.created_at).days > 30)

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from ai_safety_eval_triage.ingest import load_eval_cases
+from ai_safety_eval_triage.models import is_label_disagreement
 from ai_safety_eval_triage.pipeline import run_triage
 
 
@@ -26,6 +27,15 @@ def test_escalation_metrics_are_nonzero() -> None:
     run = run_triage(cases, version)
     assert run.metrics.escalation_precision >= 0.7
     assert run.metrics.escalation_recall >= 0.7
+
+
+def test_disagreement_predicate_excludes_unlabeled() -> None:
+    assert is_label_disagreement("violation", "ambiguous")
+    assert is_label_disagreement("safe", "violation")
+    assert not is_label_disagreement("violation", "violation")
+    assert not is_label_disagreement("unlabeled", "ambiguous")
+    assert not is_label_disagreement("violation", "unlabeled")
+    assert not is_label_disagreement("unlabeled", "unlabeled")
 
 
 def test_unlabeled_case_is_not_model_judge_disagreement() -> None:

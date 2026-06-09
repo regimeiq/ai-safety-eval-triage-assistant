@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from ai_safety_eval_triage.models import EvalCase, TriageCase
+from ai_safety_eval_triage.models import EvalCase, TriageCase, is_label_disagreement
 from ai_safety_eval_triage.taxonomy import normalize_policy_family
 
 SEVERITY_WEIGHT = {"low": 12.0, "medium": 34.0, "high": 58.0, "critical": 76.0}
@@ -57,7 +57,7 @@ def score_case(case: EvalCase) -> TriageCase:
     if "unlabeled" in {case.expected_label, case.evaluator_label}:
         score += 4.0
         reason_codes.append("MISSING_LABEL")
-    elif case.expected_label != case.evaluator_label:
+    elif is_label_disagreement(case.expected_label, case.evaluator_label):
         score += 8.0
         reason_codes.append("MODEL_JUDGE_DISAGREEMENT")
 
