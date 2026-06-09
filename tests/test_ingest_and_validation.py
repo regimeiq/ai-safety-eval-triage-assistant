@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from datetime import timedelta
 from pathlib import Path
 
 import pytest
@@ -46,6 +47,15 @@ def test_unredacted_marker_is_rejected() -> None:
     }
     with pytest.raises(ValidationError):
         EvalCase.model_validate(payload)
+
+
+def test_naive_created_at_is_coerced_to_utc() -> None:
+    _, cases = load_eval_cases("fixtures/eval_cases.json")
+    payload = cases[0].model_dump(mode="json")
+    payload["created_at"] = "2026-05-01T13:15:00"  # no timezone marker
+    case = EvalCase.model_validate(payload)
+    assert case.created_at.tzinfo is not None
+    assert case.created_at.utcoffset() == timedelta(0)
 
 
 def test_extra_prompt_field_is_rejected() -> None:

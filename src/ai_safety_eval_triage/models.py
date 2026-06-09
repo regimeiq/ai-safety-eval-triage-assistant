@@ -1,12 +1,19 @@
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 EvalLabel = Literal["violation", "safe", "refusal", "ambiguous", "unlabeled"]
 Severity = Literal["low", "medium", "high", "critical"]
+
+
+def _coerce_utc(value: datetime) -> datetime:
+    """Treat naive timestamps as UTC so imported cases compare safely with tz-aware times."""
+    if value.tzinfo is None:
+        return value.replace(tzinfo=timezone.utc)
+    return value
 
 
 class EvalCase(BaseModel):
@@ -28,6 +35,11 @@ class EvalCase(BaseModel):
     human_escalate: bool
     gold_cluster_id: str = Field(min_length=3)
     notes: str = ""
+
+    @field_validator("created_at")
+    @classmethod
+    def _ensure_timezone(cls, value: datetime) -> datetime:
+        return _coerce_utc(value)
 
     @field_validator("case_id", "dataset_source", "model_name", "policy_family", "attack_style")
     @classmethod
@@ -76,6 +88,11 @@ class TriageCase(BaseModel):
     escalation_tier: str
     reason_codes: list[str]
     cluster_id: str | None = None
+
+    @field_validator("created_at")
+    @classmethod
+    def _ensure_timezone(cls, value: datetime) -> datetime:
+        return _coerce_utc(value)
 
 
 class RiskCluster(BaseModel):
