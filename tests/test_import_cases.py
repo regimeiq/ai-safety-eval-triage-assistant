@@ -15,6 +15,17 @@ def test_import_cases_normalizes_json_fixture(tmp_path: Path) -> None:
     assert isinstance(payload["cases"][0]["evasion_signals"], list)
 
 
+def test_import_cases_accepts_bare_json_list(tmp_path: Path) -> None:
+    fixture = json.loads(Path("fixtures/eval_cases.json").read_text(encoding="utf-8"))
+    list_path = tmp_path / "cases_list.json"
+    list_path.write_text(json.dumps(fixture["cases"]), encoding="utf-8")
+    output = tmp_path / "imported.json"
+    import_cases(list_path, output, "json")
+    payload = json.loads(output.read_text(encoding="utf-8"))
+    assert payload["taxonomy_version"] == "imported-v1"
+    assert len(payload["cases"]) == len(fixture["cases"])
+
+
 def test_import_cases_normalizes_csv(tmp_path: Path) -> None:
     csv_path = tmp_path / "cases.csv"
     csv_path.write_text(

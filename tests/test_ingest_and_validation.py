@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import json
+from pathlib import Path
+
 import pytest
 from pydantic import ValidationError
 
@@ -12,6 +15,15 @@ def test_fixture_loads() -> None:
     assert version == "2026-05-v1"
     assert len(cases) >= 12
     assert all(case.prompt_summary for case in cases)
+
+
+def test_bare_json_list_payload_loads(tmp_path: Path) -> None:
+    fixture = json.loads(Path("fixtures/eval_cases.json").read_text(encoding="utf-8"))
+    list_path = tmp_path / "bare_list.json"
+    list_path.write_text(json.dumps(fixture["cases"][:3]), encoding="utf-8")
+    version, cases = load_eval_cases(list_path)
+    assert version == "unknown"
+    assert [case.case_id for case in cases] == [row["case_id"] for row in fixture["cases"][:3]]
 
 
 def test_unredacted_marker_is_rejected() -> None:

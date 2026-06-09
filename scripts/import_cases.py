@@ -67,8 +67,12 @@ def _normalize_row(row: dict) -> dict:
 
 def _load_json(path: Path) -> tuple[str, list[dict]]:
     payload = json.loads(path.read_text(encoding="utf-8"))
-    taxonomy_version = str(payload.get("taxonomy_version") or "imported-v1")
-    rows = payload.get("cases", payload if isinstance(payload, list) else [])
+    if isinstance(payload, list):
+        taxonomy_version = "imported-v1"
+        rows: object = payload
+    else:
+        taxonomy_version = str(payload.get("taxonomy_version") or "imported-v1")
+        rows = payload.get("cases", [])
     if not isinstance(rows, list):
         raise ValueError("JSON input must be a list of cases or an object with a 'cases' list.")
     return taxonomy_version, [_normalize_row(row) for row in rows]
