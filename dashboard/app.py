@@ -143,28 +143,31 @@ def main() -> None:
 
     with risk_register:
         st.subheader("Emerging AI Risk Register")
-        register_df = pd.DataFrame([entry.model_dump() for entry in risk_entries])
-        register_df["early_indicators"] = register_df["early_indicators"].map(
-            lambda values: ", ".join(values)
-        )
-        st.dataframe(
-            register_df[
-                [
-                    "risk_area",
-                    "severity",
-                    "prevalence",
-                    "exposure",
-                    "trajectory",
-                    "confidence",
-                    "risk_score",
-                    "early_indicators",
-                    "abuse_pathway",
-                    "recommended_mitigation",
-                ]
-            ],
-            use_container_width=True,
-            hide_index=True,
-        )
+        if risk_entries:
+            register_df = pd.DataFrame([entry.model_dump() for entry in risk_entries])
+            register_df["early_indicators"] = register_df["early_indicators"].map(
+                lambda values: ", ".join(values)
+            )
+            st.dataframe(
+                register_df[
+                    [
+                        "risk_area",
+                        "severity",
+                        "prevalence",
+                        "exposure",
+                        "trajectory",
+                        "confidence",
+                        "risk_score",
+                        "early_indicators",
+                        "abuse_pathway",
+                        "recommended_mitigation",
+                    ]
+                ],
+                use_container_width=True,
+                hide_index=True,
+            )
+        else:
+            st.info("No risk-register entries: every cluster in this run is LOW tier.")
 
     with health:
         st.subheader("Eval Health Heartbeat")
@@ -186,8 +189,11 @@ def main() -> None:
     with casepack:
         st.subheader("Cluster Casepack Preview")
         cluster_ids = [cluster.cluster_id for cluster in run.clusters]
-        selected = st.selectbox("Cluster", cluster_ids)
-        st.markdown(render_casepack(run, selected))
+        if cluster_ids:
+            selected = st.selectbox("Cluster", cluster_ids)
+            st.markdown(render_casepack(run, selected))
+        else:
+            st.info("No clusters were produced by this run.")
 
 
 if __name__ == "__main__":

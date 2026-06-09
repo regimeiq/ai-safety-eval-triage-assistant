@@ -320,6 +320,18 @@ def _case_line(case: TriageCase) -> str:
 
 def render_casepack(run: TriageRun, cluster_id: str | None = None) -> str:
     cluster = _select_cluster(run, cluster_id)
+    if cluster is None:
+        return "\n".join(
+            [
+                "# Demo Risk Cluster Casepack",
+                "",
+                f"Generated: {run.generated_at.isoformat()}",
+                f"Analysis as of: {run.analysis_as_of.isoformat()}",
+                "",
+                "No risk clusters were produced by this run, so there is no casepack to show.",
+                "",
+            ]
+        )
     member_ids = set(cluster.case_ids)
     members = [case for case in run.cases if case.case_id in member_ids]
     lines = [
@@ -464,12 +476,14 @@ def render_error_analysis(
     return "\n".join(lines) + "\n"
 
 
-def _select_cluster(run: TriageRun, cluster_id: str | None = None) -> RiskCluster:
+def _select_cluster(run: TriageRun, cluster_id: str | None = None) -> RiskCluster | None:
     if cluster_id:
         for cluster in run.clusters:
             if cluster.cluster_id == cluster_id:
                 return cluster
         raise ValueError(f"Cluster not found: {cluster_id}")
+    if not run.clusters:
+        return None
     return sorted(run.clusters, key=lambda cluster: (-cluster.max_score, -cluster.size))[0]
 
 

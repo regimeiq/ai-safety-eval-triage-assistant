@@ -39,6 +39,21 @@ def test_structured_output_rows_cover_queue_clusters_and_register() -> None:
     assert "monitoring_signals" in register_rows[0]
 
 
+def test_write_reports_handles_zero_cluster_run(tmp_path) -> None:
+    run = run_triage([])
+    assert run.clusters == []
+    write_reports(
+        run,
+        docs_dir=tmp_path / "docs",
+        out_dir=tmp_path / "out",
+        outputs_dir=tmp_path / "outputs",
+    )
+    casepack = (tmp_path / "docs" / "demo_casepack.md").read_text(encoding="utf-8")
+    assert "No risk clusters were produced" in casepack
+    assert (tmp_path / "outputs" / "summary.md").exists()
+    assert (tmp_path / "out" / "triage_run.json").exists()
+
+
 def test_write_reports_generates_public_outputs(tmp_path) -> None:
     version, cases = load_eval_cases("fixtures/eval_cases.json")
     run = run_triage(cases, version)
