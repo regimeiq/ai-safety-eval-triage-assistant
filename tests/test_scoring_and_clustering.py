@@ -3,6 +3,7 @@ from __future__ import annotations
 from ai_safety_eval_triage.ingest import load_eval_cases
 from ai_safety_eval_triage.models import is_label_disagreement
 from ai_safety_eval_triage.pipeline import run_triage
+from ai_safety_eval_triage.scoring import ESCALATION_THRESHOLD, escalation_tier
 
 
 def test_scoring_ranks_clear_violations_above_benign_controls() -> None:
@@ -27,6 +28,15 @@ def test_escalation_metrics_are_nonzero() -> None:
     run = run_triage(cases, version)
     assert run.metrics.escalation_precision >= 0.7
     assert run.metrics.escalation_recall >= 0.7
+
+
+def test_escalation_tier_boundaries() -> None:
+    assert escalation_tier(75.0) == "CRITICAL"
+    assert escalation_tier(74.9) == "ELEVATED"
+    assert escalation_tier(ESCALATION_THRESHOLD) == "ELEVATED"
+    assert escalation_tier(54.9) == "WATCH"
+    assert escalation_tier(35.0) == "WATCH"
+    assert escalation_tier(34.9) == "LOW"
 
 
 def test_disagreement_predicate_excludes_unlabeled() -> None:

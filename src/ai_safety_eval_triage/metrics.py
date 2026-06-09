@@ -3,6 +3,7 @@ from __future__ import annotations
 from itertools import combinations
 
 from ai_safety_eval_triage.models import TriageCase, TriageMetrics
+from ai_safety_eval_triage.scoring import ESCALATION_THRESHOLD
 
 
 def _f1(precision: float, recall: float) -> float:
@@ -17,7 +18,9 @@ def _pair_key(left: str, right: str) -> tuple[str, str]:
     return tuple(sorted((left, right)))
 
 
-def compute_metrics(cases: list[TriageCase], escalation_threshold: float = 55.0) -> TriageMetrics:
+def compute_metrics(
+    cases: list[TriageCase], escalation_threshold: float = ESCALATION_THRESHOLD
+) -> TriageMetrics:
     predicted_escalations = {
         case.case_id for case in cases if case.escalation_score >= escalation_threshold
     }

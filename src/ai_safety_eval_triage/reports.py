@@ -7,6 +7,7 @@ from pathlib import Path
 
 from ai_safety_eval_triage.models import RiskCluster, TriageCase, TriageRun
 from ai_safety_eval_triage.risk_register import build_risk_register
+from ai_safety_eval_triage.scoring import ESCALATION_THRESHOLD
 from ai_safety_eval_triage.taxonomy import policy_display_name
 
 
@@ -405,7 +406,9 @@ def render_risk_register(run: TriageRun) -> str:
     return "\n".join(lines) + "\n"
 
 
-def render_error_analysis(run: TriageRun, escalation_threshold: float = 55.0) -> str:
+def render_error_analysis(
+    run: TriageRun, escalation_threshold: float = ESCALATION_THRESHOLD
+) -> str:
     predicted_escalations = {
         case.case_id for case in run.cases if case.escalation_score >= escalation_threshold
     }
